@@ -11,6 +11,7 @@ export class AxiosSignInMapper {
         id: data.user.id,
         email: data.user.email,
         name: data.user.nome,
+        cnpj: data.user.cnpj,
       },
     }
   }

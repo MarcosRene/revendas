@@ -66,7 +66,7 @@ export function DialogQuantity({
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>
+        <DialogHeader flexDirection="column">
           <DialogTitle>Alterar quantidade</DialogTitle>
           <DialogDescription>
             Informe a quantidade que você deseja.

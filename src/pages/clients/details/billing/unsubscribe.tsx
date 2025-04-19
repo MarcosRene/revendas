@@ -107,7 +107,7 @@ export function Unsubscribe({ clientId }: UnsubscribeProps) {
       </DialogTrigger>
 
       <DialogContent as="form" onSubmit={handleSubmit(onUnsubscribe)}>
-        <DialogHeader>
+        <DialogHeader flexDirection="column">
           <DialogTitle>Cancelar assinatura</DialogTitle>
           <DialogDescription>
             Tem certeza de que deseja cancelar a assinatura do cliente e

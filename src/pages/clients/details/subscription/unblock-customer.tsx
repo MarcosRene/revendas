@@ -66,7 +66,7 @@ export function UnblockCustomer({ clientId }: UnblockCustomerProps) {
       </DialogTrigger>
 
       <DialogContent as="form" onSubmit={onUnblockClient}>
-        <DialogHeader>
+        <DialogHeader flexDirection="column">
           <DialogTitle>Desbloquear cliente</DialogTitle>
           <DialogDescription>
             Tem certeza que deseja desbloquear o cliente?

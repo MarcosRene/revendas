@@ -11,6 +11,7 @@ type AuthUser = {
   id: number
   email: string
   nome: string
+  cnpj: string
 }
 
 export interface SignInResponse {

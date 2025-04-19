@@ -108,7 +108,7 @@ export function GenerateBillingButton({
         </Button>
       </DialogTrigger>
       <DialogContent as="form" onSubmit={handleSubmit(onGenerateBilling)}>
-        <DialogHeader>
+        <DialogHeader flexDirection="column">
           <DialogTitle>Gerar cobranças</DialogTitle>
           <DialogDescription>
             Você pode gerar no máximo 12 cobranças.

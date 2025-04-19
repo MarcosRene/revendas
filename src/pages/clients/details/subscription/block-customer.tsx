@@ -99,7 +99,7 @@ export function BlockCustomer({ clientId }: BlockCustomerProps) {
         onSubmit={handleSubmit(onBlockCustomer)}
         spaceY="4"
       >
-        <DialogHeader>
+        <DialogHeader flexDirection="column">
           <DialogTitle>Bloquear cliente</DialogTitle>
           <DialogDescription>
             Tem certeza que deseja bloquear o cliente?
