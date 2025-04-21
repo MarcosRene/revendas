@@ -1,4 +1,4 @@
-import { createListCollection, Flex, Tooltip } from '@chakra-ui/react'
+import { createListCollection, Flex } from '@chakra-ui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
