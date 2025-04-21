@@ -26,12 +26,13 @@ import { activeClient } from '@/http/clients/active-client'
 import { createClient } from '@/http/clients/create-client'
 import { errorHandler } from '@/utils/error-handler'
 import { formatCNPJ } from '@/utils/format-cnpj'
+import { formatCPF } from '@/utils/format-cpf'
 
 import { NewClientForm } from './client-form'
 import { ClientSkeleton } from './skeleton'
 
 type NewClientParams = {
-  cnpj: string
+  document: string
 }
 
 const newClientFormValidationSchema = z.object({
@@ -61,7 +62,7 @@ const newClientFormValidationSchema = z.object({
 type NewClientFormData = z.infer<typeof newClientFormValidationSchema>
 
 export function NewClient() {
-  const { cnpj } = useParams<NewClientParams>()
+  const { document } = useParams<NewClientParams>()
   const navigate = useNavigate()
   const {
     formState: { plan, modules },
@@ -72,7 +73,7 @@ export function NewClient() {
     resolver: zodResolver(newClientFormValidationSchema),
   })
 
-  const { client, isClientLoading } = useGetClient({ cnpj })
+  const { client, isClientLoading } = useGetClient({ cnpj: document })
   const { mutateAsync: createClientFn, isPending: isCreatingClient } =
     useMutation({
       mutationFn: createClient,
@@ -103,7 +104,7 @@ export function NewClient() {
     })
 
   async function onCreateClient(data: NewClientFormData) {
-    await createClientFn({ ...data, cnpj })
+    await createClientFn({ ...data, cnpj: document })
   }
 
   useEffect(() => {
@@ -138,7 +139,9 @@ export function NewClient() {
                     borderRadius="l3"
                     padding="5"
                   >
-                    {formatCNPJ(cnpj)}
+                    {document?.length === 11
+                      ? formatCPF(document)
+                      : formatCNPJ(document)}
                   </Card.Title>
                 </Card.Header>
 
@@ -150,7 +153,7 @@ export function NewClient() {
           )}
           <SectionActions justifyContent="space-between">
             <Button variant="outline" disabled={isCreatingClient} asChild>
-              <Link to="/clients/validate-cnpj">Voltar</Link>
+              <Link to="/clients/validate-document">Voltar</Link>
             </Button>
             <Button type="submit" loading={isCreatingClient}>
               Salvar

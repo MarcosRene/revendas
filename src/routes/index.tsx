@@ -12,7 +12,7 @@ import { NewModules } from '@/pages/clients/modules/new'
 import { NewClient } from '@/pages/clients/new-client'
 import { EditPlans } from '@/pages/clients/plans/edit'
 import { NewPlans } from '@/pages/clients/plans/new'
-import { ValidateCNPJ } from '@/pages/clients/validate-cnpj'
+import { ValidateDocument } from '@/pages/clients/validate-document'
 import { ForgotPassword } from '@/pages/forgot-password'
 import { NewPassword } from '@/pages/forgot-password/new-password'
 import { ValidateCode } from '@/pages/forgot-password/validate-code'
@@ -35,8 +35,8 @@ export function AppRoutes() {
           <Route path=":id/plans/:planId" element={<EditPlans />} />
           <Route path="modules" element={<NewModules />} />
           <Route path=":id/modules" element={<EditModules />} />
-          <Route path="validate-cnpj" element={<ValidateCNPJ />} />
-          <Route path=":cnpj/new" element={<NewClient />} />
+          <Route path="validate-document" element={<ValidateDocument />} />
+          <Route path=":document/new" element={<NewClient />} />
           <Route path=":id/edit" element={<EditClient />} />
           <Route path=":id/details" element={<ClientDetails />} />
         </Route>

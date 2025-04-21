@@ -1,5 +1,7 @@
+import { createListCollection, Flex, Tooltip } from '@chakra-ui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
 import { z } from 'zod'
@@ -21,6 +23,13 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
+import {
+  SelectContent,
+  SelectItem,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from '@/components/ui/select'
 import { toaster } from '@/components/ui/toaster'
 import { valitate as validateAPI } from '@/http/cpnj/validate'
 import { errorHandler } from '@/utils/error-handler'
@@ -35,7 +44,7 @@ const cnpjValidationSchema = z.object({
     .refine(
       (value) => {
         const onlyNumbers = value.replace(/\D/g, '')
-        return onlyNumbers.length === 14
+        return onlyNumbers.length === 11 || onlyNumbers.length === 14
       },
       { message: 'O CPF/CNPJ deve conter apenas números' }
     ),
@@ -43,8 +52,9 @@ const cnpjValidationSchema = z.object({
 
 type CNPJValidationSchema = z.infer<typeof cnpjValidationSchema>
 
-export function ValidateCNPJ() {
+export function ValidateDocument() {
   const navigate = useNavigate()
+  const [documentType, setDocumentType] = useState('cpf')
 
   const {
     control,
@@ -66,14 +76,14 @@ export function ValidateCNPJ() {
     },
   })
 
-  async function onSubmit(data: CNPJValidationSchema) {
+  async function onValidateDocument(data: CNPJValidationSchema) {
     try {
-      const formattedCNPJNumber = data.number.replace(/\D/g, '')
+      const formattedDocumentNumber = data.number.replace(/\D/g, '')
 
-      if (!formattedCNPJNumber) return
+      if (!formattedDocumentNumber) return
 
       const { exists: cnpjAlreadyExists } = await validate({
-        cnpj: formattedCNPJNumber,
+        cnpj: formattedDocumentNumber,
       })
 
       if (cnpjAlreadyExists) {
@@ -83,7 +93,7 @@ export function ValidateCNPJ() {
         return
       }
 
-      navigate(`/clients/${formattedCNPJNumber}/new`)
+      navigate(`/clients/${formattedDocumentNumber}/new`)
     } catch (error) {
       throw error
     }
@@ -92,10 +102,10 @@ export function ValidateCNPJ() {
   return (
     <SectionRoot>
       <SectionHeader>
-        <SectionTitle>CNPJ</SectionTitle>
+        <SectionTitle>Documento</SectionTitle>
         <SectionDescription>
-          É necessário validar o CNPJ do cliente antes de poder adiciona-ló ao
-          sistema.
+          É necessário validar o documento do cliente antes de poder adiciona-ló
+          ao sistema.
         </SectionDescription>
       </SectionHeader>
 
@@ -106,33 +116,66 @@ export function ValidateCNPJ() {
         <BreadcrumbCurrentLink>Novo</BreadcrumbCurrentLink>
       </BreadcrumbRoot>
 
-      <SectionBody as="form" onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          control={control}
-          name="number"
-          render={({ field: { value, ...rest } }) => (
-            <Field
-              label="CPF/CNPJ do cliente"
-              invalid={!!errors.number}
-              errorText={errors.number?.message}
-            >
-              <TextInput
-                maxLength={19}
-                placeholder="999.999.999-99"
-                asChild
-                {...rest}
-              >
-                <MaskedInput
-                  format={
-                    value?.replace(/\D/g, '').length === 11
-                      ? '###.###.###-##'
-                      : '##.###.###/####-##'
-                  }
-                />
-              </TextInput>
-            </Field>
-          )}
-        />
+      <SectionBody as="form" onSubmit={handleSubmit(onValidateDocument)}>
+        <Flex gap="4" alignItems="flex-end">
+          <Controller
+            control={control}
+            name="number"
+            render={({ field: { ...rest } }) => {
+              return (
+                <Field
+                  label="Documento do cliente"
+                  invalid={!!errors.number}
+                  errorText={errors.number?.message}
+                >
+                  <TextInput
+                    maxLength={19}
+                    placeholder="999.999.999-99"
+                    asChild
+                    {...rest}
+                  >
+                    <MaskedInput
+                      format={
+                        documentType === 'cpf'
+                          ? '###.###.###-##'
+                          : '##.###.###/####-##'
+                      }
+                    />
+                  </TextInput>
+                </Field>
+              )
+            }}
+          />
+          <SelectRoot
+            width={{ base: '2/6', md: '2/12' }}
+            collection={createListCollection({
+              items: [
+                {
+                  label: 'CPF',
+                  value: 'cpf',
+                },
+                {
+                  label: 'CNPJ',
+                  value: 'cnpj',
+                },
+              ],
+            })}
+            value={[documentType]}
+            onValueChange={({ value }) => setDocumentType(value[0])}
+          >
+            <SelectTrigger>
+              <SelectValueText placeholder="Selecione a Cidade" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem item={'cpf'} key={'cpf'}>
+                CPF
+              </SelectItem>
+              <SelectItem item={'cnpj'} key={'cnpj'}>
+                CNPJ
+              </SelectItem>
+            </SelectContent>
+          </SelectRoot>
+        </Flex>
         <SectionActions justifyContent="space-between">
           <Button variant="outline" loading={isValidating} asChild>
             <Link to="/clients/modules">Voltar</Link>

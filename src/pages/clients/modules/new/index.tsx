@@ -316,7 +316,7 @@ export function NewModules() {
         </Skeleton>
         <Skeleton loading={isModulesLoading}>
           <Button asChild>
-            <Link to="/clients/validate-cnpj">Continuar</Link>
+            <Link to="/clients/validate-document">Continuar</Link>
           </Button>
         </Skeleton>
       </SectionActions>

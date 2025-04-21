@@ -110,7 +110,7 @@ export function EditSystemButton({
         </DialogBody>
         <DialogFooter>
           <DialogActionTrigger asChild>
-            <Button variant="outline">Cancenlar</Button>
+            <Button variant="outline">Cancelar</Button>
           </DialogActionTrigger>
           <DialogActionTrigger asChild>
             <Button>Confirmar</Button>
