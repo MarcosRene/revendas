@@ -54,7 +54,7 @@ type CNPJValidationSchema = z.infer<typeof cnpjValidationSchema>
 
 export function ValidateDocument() {
   const navigate = useNavigate()
-  const [documentType, setDocumentType] = useState('cpf')
+  const [documentType, setDocumentType] = useState('cnpj')
 
   const {
     control,
@@ -117,20 +117,53 @@ export function ValidateDocument() {
       </BreadcrumbRoot>
 
       <SectionBody as="form" onSubmit={handleSubmit(onValidateDocument)}>
-        <Flex gap="4" alignItems="flex-end">
-          <Controller
-            control={control}
-            name="number"
-            render={({ field: { ...rest } }) => {
-              return (
-                <Field
-                  label="Documento do cliente"
-                  invalid={!!errors.number}
-                  errorText={errors.number?.message}
-                >
+        <Controller
+          control={control}
+          name="number"
+          render={({ field: { ...rest } }) => {
+            return (
+              <Field
+                label="Documento do cliente"
+                invalid={!!errors.number}
+                errorText={errors.number?.message}
+              >
+                <Flex display="flex" gap="4" width="full">
+                  <SelectRoot
+                    width={{ base: '2/6', md: '2/12' }}
+                    collection={createListCollection({
+                      items: [
+                        {
+                          label: 'CPF',
+                          value: 'cpf',
+                        },
+                        {
+                          label: 'CNPJ',
+                          value: 'cnpj',
+                        },
+                      ],
+                    })}
+                    value={[documentType]}
+                    onValueChange={({ value }) => setDocumentType(value[0])}
+                  >
+                    <SelectTrigger>
+                      <SelectValueText placeholder="Selecione a Cidade" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem item="cpf" key="cpf">
+                        CPF
+                      </SelectItem>
+                      <SelectItem item="cnpj" key="cnpj">
+                        CNPJ
+                      </SelectItem>
+                    </SelectContent>
+                  </SelectRoot>
                   <TextInput
                     maxLength={19}
-                    placeholder="999.999.999-99"
+                    placeholder={
+                      documentType === 'cpf'
+                        ? '999.999.999-99'
+                        : '999.999.999/9999-99'
+                    }
                     asChild
                     {...rest}
                   >
@@ -142,40 +175,11 @@ export function ValidateDocument() {
                       }
                     />
                   </TextInput>
-                </Field>
-              )
-            }}
-          />
-          <SelectRoot
-            width={{ base: '2/6', md: '2/12' }}
-            collection={createListCollection({
-              items: [
-                {
-                  label: 'CPF',
-                  value: 'cpf',
-                },
-                {
-                  label: 'CNPJ',
-                  value: 'cnpj',
-                },
-              ],
-            })}
-            value={[documentType]}
-            onValueChange={({ value }) => setDocumentType(value[0])}
-          >
-            <SelectTrigger>
-              <SelectValueText placeholder="Selecione a Cidade" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem item={'cpf'} key={'cpf'}>
-                CPF
-              </SelectItem>
-              <SelectItem item={'cnpj'} key={'cnpj'}>
-                CNPJ
-              </SelectItem>
-            </SelectContent>
-          </SelectRoot>
-        </Flex>
+                </Flex>
+              </Field>
+            )
+          }}
+        />
         <SectionActions justifyContent="space-between">
           <Button variant="outline" loading={isValidating} asChild>
             <Link to="/clients/modules">Voltar</Link>
